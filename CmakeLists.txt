@@ -1,0 +1,49 @@
+cmake_minimum_required(VERSION 3.30)
+project(LVGLSDLDEMO)
+
+set(CMAKE_C_STANDARD 11)
+
+# 包含目录
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/third_party/lvgl
+    ${CMAKE_SOURCE_DIR}/third_party/lvgl/../
+    ${CMAKE_SOURCE_DIR}/third_party/lvgl/src
+    # ${CMAKE_SOURCE_DIR}/third_party/lvgl/examples/porting
+)
+
+
+# 递归收集 .c 文件（从指定根目录开始）
+# LVGL
+file(GLOB_RECURSE LVGL_SRC 
+    LIST_DIRECTORIES false  # 忽略目录，仅保留文件
+    "${CMAKE_SOURCE_DIR}/third_party/lvgl/src/*.c"
+)
+
+# 可选：排除不需要的目录
+# list(FILTER SOURCES EXCLUDE REGEX ".*/tests?/.*")  # 排除 test 或 tests 目录
+
+
+# 源文件
+file(GLOB_RECURSE SOURCES 
+    LIST_DIRECTORIES false  
+    "${CMAKE_SOURCE_DIR}/src/*.c"
+)
+
+# 链接库路径
+link_directories(${CMAKE_SOURCE_DIR}/lib)
+
+# message(STATUS "Project source dir: ${PROJECT_SOURCE_DIR}")
+# message(STATUS "Main.c path: ${PROJECT_SOURCE_DIR}/src/main.c")
+
+# 可执行文件
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.c ${SOURCES} ${LVGL_SRC})
+
+# 链接库
+target_link_libraries(${PROJECT_NAME}
+    SDL3
+)
+
+
+# 拷贝库文件 文件
+file(COPY ${PROJECT_SOURCE_DIR}/lib/SDL3.dll DESTINATION ${PROJECT_BINARY_DIR})
