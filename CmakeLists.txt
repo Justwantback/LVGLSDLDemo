@@ -50,6 +50,7 @@ target_link_libraries(${PROJECT_NAME}
     SDL3
 )
 
+set(CMAKE_BUILD_PARALLEL_LEVEL 8)
 
 # 拷贝库文件 文件
 file(COPY ${PROJECT_SOURCE_DIR}/lib/SDL3.dll DESTINATION ${PROJECT_BINARY_DIR})
